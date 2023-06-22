@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Another;
+use App\Entity\Bar;
 use App\Entity\First;
 use App\Entity\Foo;
 use App\Entity\Second;
@@ -31,6 +32,17 @@ class AppFixtures extends Fixture
             $third->setParent($second);
             $manager->persist($third);
         }
+
+
+        $bar1 = new Bar(1);
+        $bar1->setName('Bar 1');
+        $manager->persist($bar1);
+        $bar2 = new Bar(2);
+        $bar2->setName('Bar 2');
+        $bar2->setParent($bar1);
+        $manager->persist($bar2);
+
+
 
         $manager->flush();
     }
