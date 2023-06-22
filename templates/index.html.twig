@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table border="1" style="border-collapse: collapse" cellpadding="4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Root</th>
+                <th>Root</th>
+            </tr>
+        </thead>
+    {% for foo in foos %}
+        <tr>
+            <th>{{ foo.id }}</th>
+            <td>{{ foo }}</td>
+            <td>{{ foo.root ?: '-' }}</td>
+            <td>{{ foo.root ?: '-' }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+
+    <h1>Case 1</h1>
+
+    <p>Route parameters do match entity property names.</p>
+    <p><code>#[MapEntity<strong>(id: 'child')</strong>] ?Foo $child = null</code>,<br><code>#[Route('/case1/{root?null}/{parent?}', name: 'case1')]</code></p>
+
+    <ol>
+        <li><a href="{{ path('case1', {root: 1, parent: 2}) }}">$root == 'Root 1', $parent == 'Parent 1'</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
+        <li><a href="{{ path('case1', {root: 1}) }}">$root == 'Root 1', no parent set.</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
+        <li><a href="{{ path('case1', {root: 2}) }}">$root == 'Parent 1'</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
+        <li><a href="{{ path('case1', {root: 3}) }}">$root == 'Child 1'</a></li>
+        <li><a href="{{ path('case1', {parent: 3}) }}">$parent == 'Child 1'</a></li>
+        <li><a href="{{ path('case1', {child: 3}) }}">$child == 'Child 1'</a></li>
+    </ol>
+
+    <h1>Case 2</h1>
+
+    <p>Route parameters do match entity property names.</p>
+    <p><code>#[MapEntity] ?Foo $child = null</code>,<br><code>#[Route('/case2/{root?null}/{parent?}', name: 'case2')]</code></p>
+
+    <ol>
+        <li><a href="{{ path('case2', {root: 1, parent: 2}) }}">$root == 'Root 1', $parent == 'Parent 1'</a> <span style="color:red">Faulty: $child is populated with first child of 'Parent 1'</span></li>
+        <li><a href="{{ path('case2', {root: 1}) }}">$root == 'Root 1', no parent set.</a> <span style="color:red">Faulty: $child is populated out of nowhere with 'Root 1'</span></li>
+        <li><a href="{{ path('case2', {root: 4}) }}">$root == 'Root 2', no parent set.</a> <span style="color:red">Faulty: $child is populated out of nowhere with 'Root 2'</span></li>
+        <li><a href="{{ path('case2', {root: 2}) }}">$root == 'Parent 1'</a></li>
+        <li><a href="{{ path('case2', {parent: 2}) }}">$parent == 'Parent 1'</a></li>
+        <li><a href="{{ path('case2', {child: 2}) }}">$child == 'Parent 1'</a> <span style="color:orange">Probably intended: $child not loaded because is not part of route parameters</li>
+        <li><a href="{{ path('case2', {root: 3}) }}">$root == 'Child 1'</a> <span style="color:orange">Not faulty by an accident: $child is NOT populated, because 'Child 1' has no parent on its own</span></li>
+        <li><a href="{{ path('case2', {parent: 3}) }}">$parent == 'Child 1'</a></li>
+    </ol>
+
+    <h1>Case 3</h1>
+
+    <p>Route parameters <strong>do not match</strong> entity property names</p>
+
+    <p><code>#[MapEntity] ?Foo $child = null</code>,<br><code>#[Route('/case3/<strong>{ro?null}/{pa?}</strong>', name: 'case3')]</code></p>
+
+    <ol>
+        <li><a href="{{ path('case3', {ro: 1, pa: 2}) }}">$root == 'Root 1', $parent == 'Parent 1'</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
+        <li><a href="{{ path('case3', {ro: 1}) }}">$root == 'Root 1', no parent set.</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
+        <li><a href="{{ path('case3', {ro: 4}) }}">$root == 'Root 2', no parent set.</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
+        <li><a href="{{ path('case3', {ro: 2}) }}">$root == 'Parent 1'</a></li>
+        <li><a href="{{ path('case3', {pa: 2}) }}">$parent == 'Parent 1'</a></li>
+        <li><a href="{{ path('case3', {ch: 2}) }}">$child == 'Parent 1'</a></li>
+        <li><a href="{{ path('case3', {ro: 3}) }}">$root == 'Child 1'</a></li>
+        <li><a href="{{ path('case3', {pa: 3}) }}">$parent == 'Child 1'</a></li>
+    </ol>
+
+
+
+
+{% endblock %}
