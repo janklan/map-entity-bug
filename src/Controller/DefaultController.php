@@ -64,4 +64,17 @@ class DefaultController extends AbstractController
             child: $ch ? $ch->getId().' - '.$ch : 'Not loaded',
         );
     }
+
+    #[Route('/case4/{root?null}/{parent?}', name: 'case4')]
+    public function case4(
+        ?Foo                                 $root = null,
+        ?Foo                   $parent = null,
+        ?Foo                   $child = null,
+    ): Response {
+        dd(
+            root: $root ? $root?->getId().' - '.$root : 'Not loaded',
+            parent: $parent ? $parent->getId().' - '.$parent : 'Not loaded',
+            child: $child ? $child->getId().' - '.$child : 'Not loaded',
+        );
+    }
 }
