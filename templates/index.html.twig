@@ -46,7 +46,7 @@
         <li><a href="{{ path('case2', {root: 2}) }}">$root == 'Parent 1'</a> <span style="color:darkgreen">Works as intended, $child is empty</span></li>
         <li><a href="{{ path('case2', {parent: 2}) }}">$parent == 'Parent 1'</a></li>
         <li><a href="{{ path('case2', {child: 2}) }}">$child == 'Parent 1'</a> <span style="color:orange">Probably intended: $child not loaded because is not part of route parameters</span></li>
-        <li><a href="{{ path('case2', {root: 3}) }}">$root == 'Child 1'</a> <span style="color:orange">Not faulty by an accident: $child is NOT populated, because 'Child 1' has no parent on its own</span></li>
+        <li><a href="{{ path('case2', {root: 3}) }}">$root == 'Child 1'</a> <span style="color:orange">Not faulty by an accident: $child is NOT populated, because 'Child 1' has no child on its own</span></li>
         <li><a href="{{ path('case2', {parent: 3}) }}">$parent == 'Child 1'</a></li>
     </ol>
 
